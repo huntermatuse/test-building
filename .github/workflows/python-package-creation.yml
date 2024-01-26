@@ -3,7 +3,7 @@ name: Build and Release Python Package
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   build-and-release:
@@ -11,21 +11,30 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.11.6'  
+        python-version: '3.11.6' 
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Check Python version and location
+      run: |
+        which python
+        python --version
+
+    - name: List installed Python packages
+      run: |
+        pip freeze
+
     - name: Zip Python files
-      run: zip -r python_files.zip . -i \*.py  
+      run: zip -r python_files.zip . -i \*.py
 
     - name: Create Release
-      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
